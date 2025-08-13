@@ -28,6 +28,7 @@ import { signInUser } from "@/server/user"
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
  
 const formSchema = z.object({
@@ -39,6 +40,7 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -55,6 +57,7 @@ export function LoginForm({
       const response = await signInUser(values.email, values.password)
       if(response.success){
         toast.success("Login successful!")
+        router.push("/dashboard");
       }else{
         toast.error("Login failed.")
         console.log("Login failed:", response)

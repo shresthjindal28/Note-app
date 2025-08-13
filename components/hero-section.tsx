@@ -62,15 +62,15 @@ export default function HeroSection() {
                                         asChild
                                         variant="outline"
                                         size="sm">
-                                        <Link href="#">
+                                        <Link href="/login">
                                             <span>Login</span>
                                         </Link>
                                     </Button>
                                     <Button
                                         asChild
                                         size="sm">
-                                        <Link href="#">
-                                            <span>Login</span>
+                                        <Link href="/signup">
+                                            <span>SignUp</span>
                                         </Link>
                                     </Button>
                                 </div>

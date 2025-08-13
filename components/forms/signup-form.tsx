@@ -28,6 +28,7 @@ import { signUpUser } from "@/server/user";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z.email(),
@@ -40,6 +41,7 @@ export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -57,7 +59,8 @@ export function SignupForm({
       setIsLoading(true);
       const response = await signUpUser(values.email, values.password, values.name);
       if (response.success) {
-        toast.success("Signup successful!");
+        toast.success("Check Email For Verification Link");
+        router.push("/login");
       } else {
         toast.error("Signup failed.");
         console.log("Signup failed:", response);
