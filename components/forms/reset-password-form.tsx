@@ -1,5 +1,4 @@
-"use client";
-
+"use client"
 import React, { useState } from "react";
 import { z } from "zod";
 
@@ -24,33 +23,32 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signUpUser } from "@/server/user";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 
 const formSchema = z.object({
-  email: z.email(),
   password: z.string().min(6).max(100),
-  confirmPassword: z.string().min(8),
-  name: z.string().min(1, "Name is required"),
+  confirmPassword: z.string().min(6).max(100),
 });
 
-export function SignupForm({
+export function ResetPasswordForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const router = useRouter();
+
+  const searchParams = useSearchParams()
+  const token = searchParams.get("token");
+
+
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
       password: "",
       confirmPassword: "",
-      name: "",
     },
   });
 
@@ -58,79 +56,44 @@ export function SignupForm({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
+
+
       if (values.password !== values.confirmPassword) {
-              toast.error("Passwords do not match.");
-              setIsLoading(false);
-              return;
-            }
-      const response = await signUpUser(values.email, values.password, values.name);
-      if (response.success) {
-        toast.success("Check Email For Verification Link");
+        toast.error("Passwords do not match.");
+        setIsLoading(false);
+        return;
+      }
+
+      const {error} = await authClient.resetPassword({
+        newPassword: values.password,
+        token: token ?? ""
+      });
+      if (!error) {
+        toast.success("Password reset successful!");
         router.push("/login");
       } else {
-        toast.error("Signup failed.");
-        console.log("Signup failed:", response);
+        toast.error("Password reset failed.");
+        console.log("Password reset failed:", error);
       }
     } catch (error) {
-      console.error("Signup failed:", error);
+      console.error("Password reset failed:", error);
     } finally {
       setIsLoading(false);
     }
   }
-
-
-  const signup = async () => {
-      await authClient.signIn.social({
-          provider: "google",
-          callbackURL:"/dashboard"
-      })
-  }
-
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle>Signup to your account</CardTitle>
+          <CardTitle>Reset Password</CardTitle>
           <CardDescription>
-            Enter your email below to Signup to your account
+            Enter your email below to reset your password
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <div className="flex flex-col gap-6">
-                <div className="grid gap-3">
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input placeholder="m@example.com" {...field} />
-                        </FormControl>
-
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="grid gap-3">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="John Doe" {...field} />
-                        </FormControl>
-
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
                 <div className="grid gap-3">
                   <FormField
                     control={form.control}
@@ -151,7 +114,8 @@ export function SignupForm({
                     )}
                   />
                 </div>
-                 <div className="grid gap-3">
+
+                <div className="grid gap-3">
                   <FormField
                     control={form.control}
                     name="confirmPassword"
@@ -171,25 +135,15 @@ export function SignupForm({
                     )}
                   />
                 </div>
-                
                 <div className="flex flex-col gap-3">
                   <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? (
                       <Loader2 className="animate-spin size-4" />
                     ) : (
-                      "Signup"
+                      "Change Password"
                     )}
                   </Button>
-                  <Button onClick={signup} type="button" variant="outline" className="w-full">
-                    Signup with Google
-                  </Button>
                 </div>
-              </div>
-              <div className="mt-4 text-center text-sm">
-                Have an account?{" "}
-                <Link href="/login" className="underline underline-offset-4">
-                  Login
-                </Link>
               </div>
             </form>
           </Form>

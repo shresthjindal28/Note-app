@@ -24,50 +24,39 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signInUser } from "@/server/user";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 
 const formSchema = z.object({
   email: z.email(),
-  password: z.string().min(6).max(100),
 });
 
-export function LoginForm({
+export function ForgotPasswordForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
-      password: "",
     },
   });
-
-  const signIn = async () => {
-    await authClient.signIn.social({
-        provider: "google",
-        callbackURL:"/dashboard"
-    })
-}
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
-      const response = await signInUser(values.email, values.password);
-      if (response.success) {
-        toast.success("Login successful!");
-        router.push("/dashboard");
+      const {error} = await authClient.forgetPassword({
+        email: values.email,
+        redirectTo: "/reset-password"
+      })
+      if (!error) {
+        toast.success("Password reset email sent!");
       } else {
-        toast.error("Login failed.");
-        console.log("Login failed:", response);
+        toast.error("Failed to send password reset email.");
+        console.log("Login failed:", error);
       }
     } catch (error) {
       console.error("Login failed:", error);
@@ -79,9 +68,9 @@ export function LoginForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
+          <CardTitle>Forgot your password?</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Enter your email below to reset your password
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -104,35 +93,7 @@ export function LoginForm({
                     )}
                   />
                 </div>
-
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="••••••••"
-                          type="password"
-                          {...field}
-                        />
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="grid gap-3">
-                  <div className="flex items-center">
-                    <Link
-                      href="/forgot-password"
-                      className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                    >
-                      Forgot your password?
-                    </Link>
-                  </div>
-                </div>
+                
                 <div className="flex flex-col gap-3">
                   <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? (
@@ -141,16 +102,7 @@ export function LoginForm({
                       "Login"
                     )}
                   </Button>
-                  <Button onClick={signIn} type="button" variant="outline" className="w-full">
-                    Login with Google
-                  </Button>
                 </div>
-              </div>
-              <div className="mt-4 text-center text-sm">
-                Don&apos;t have an account?{" "}
-                <Link href="/signup" className="underline underline-offset-4">
-                  Sign up
-                </Link>
               </div>
             </form>
           </Form>
