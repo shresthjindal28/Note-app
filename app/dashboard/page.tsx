@@ -1,3 +1,4 @@
+import { CreateNotebookButton } from '@/components/create-notebook-button';
 import { Logout } from '@/components/logout'
 import { PageWrapper } from '@/components/page-wapper'
 import { getNotebooks } from '@/server/notebooks';
@@ -8,7 +9,8 @@ export default async function page() {
 
   return (
     <PageWrapper breadcrumb={[{ label: 'Dashboard', href: '/dashboard' }]}>
-      <h1>Dashboard</h1>
+      <h1>Notebooks</h1>
+      <CreateNotebookButton />
       {notebooks.success && notebooks?.notebooks?.map((notebook) =>(
         <div key={notebook.id}>
           {notebook.name}
@@ -18,8 +20,6 @@ export default async function page() {
       {notebooks.success && notebooks?.notebooks?.length === 0 && (
         <p>No notebooks found</p>
       )}
-
-      <Logout />
     </PageWrapper>
   )
 }
