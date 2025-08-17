@@ -25,7 +25,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 
 const formSchema = z.object({
@@ -38,10 +38,12 @@ export function ResetPasswordForm({
   ...props
 }: React.ComponentProps<"div">) {
   const router = useRouter();
-
-  const searchParams = useSearchParams()
-  const token = searchParams.get("token");
-
+  const [token, setToken] = useState<string | null>(null);
+  React.useEffect(() => {
+    // Wrap useSearchParams in Suspense boundary
+    const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+    setToken(searchParams ? searchParams.get("token") : null);
+  }, []);
 
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
