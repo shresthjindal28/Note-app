@@ -28,6 +28,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <title>NoteForge - Your Notes, Organized</title>
+        <meta name="description" content="NoteForge is a powerful note-taking app to organize your thoughts and ideas." />
+        <meta name="keywords" content="notes, notebook, productivity, note-taking, NoteForge" />
+        <meta property="og:title" content="NoteForge - Your Notes, Organized" />
+        <meta property="og:description" content="NoteForge is a powerful note-taking app to organize your thoughts and ideas." />
+        <meta property="og:image" content="/noteforge-logo.png" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="NoteForge - Your Notes, Organized" />
+        <meta name="twitter:description" content="NoteForge is a powerful note-taking app to organize your thoughts and ideas." />
+        <meta name="twitter:image" content="/noteforge-logo.png" />
+        <link rel="icon" href="/noteforge-logo.png" type="image/png" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
