@@ -3,12 +3,13 @@ import RichTextEditor from "@/components/rich-text-editor";
 import { getNoteById } from "@/server/notes";
 import { JSONContent } from "@tiptap/react";
 
-type Params = {
+type Params = Promise<{
   noteId: string;
-};
+}>;
+
 
 export default async function NotePage({ params }: { params: Params }) {
-  const { noteId } = params;
+  const { noteId } = await params;
   const { note } = await getNoteById(noteId);
   return (
     <PageWrapper
