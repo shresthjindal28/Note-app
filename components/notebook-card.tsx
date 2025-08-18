@@ -3,6 +3,7 @@
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -26,6 +27,7 @@ import { deleteNotebook } from "@/server/notebooks";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { format } from "date-fns";
 
 interface NotebookCardProps {
   notebook: Notebook;
@@ -54,9 +56,14 @@ export default function NotebookCard({ notebook }: NotebookCardProps) {
     }
   };
   return (
-    <Card>
+    <Card className="transition-all hover:shadow-md">
       <CardHeader>
         <CardTitle>{notebook.name}</CardTitle>
+        <CardDescription>
+          {notebook.createdAt
+            ? format(new Date(notebook.createdAt), "PPP")
+            : "Date not available"}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <p>{notebook.notes?.length ?? 0} notes</p>

@@ -3,6 +3,7 @@
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -26,6 +27,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { deleteNote } from "@/server/notes";
+import { format } from "date-fns";
 
 interface NotebookCardProps {
   note: Note;
@@ -55,9 +57,14 @@ export default function NoteCard({ note }: NotebookCardProps) {
   };
 
   return (
-    <Card>
+    <Card className="transition-all hover:shadow-md">
       <CardHeader>
         <CardTitle>{note.title}</CardTitle>
+        <CardDescription>
+          {note.createdAt
+            ? format(new Date(note.createdAt), "PPP")
+            : "Date not available"}
+        </CardDescription>
       </CardHeader>
       <CardContent></CardContent>
       <CardFooter className="flex justify-end gap-2">

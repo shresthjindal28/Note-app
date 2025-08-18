@@ -7,12 +7,6 @@ import { Menu, X } from 'lucide-react'
 import Image from 'next/image'
 import { ModeToggle } from './mode-toggle'
 
-const menuItems = [
-    { name: 'Features', href: '#' },
-    { name: 'Solution', href: '#' },
-    { name: 'Pricing', href: '#' },
-    { name: 'About', href: '#' },
-]
 
 export default function HeroSection() {
     const [menuState, setMenuState] = useState(false)
@@ -42,19 +36,7 @@ export default function HeroSection() {
                             </div>
 
                             <div className="bg-background in-data-[state=active]:block lg:in-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none dark:shadow-none dark:lg:bg-transparent">
-                                <div className="lg:pr-4">
-                                    <ul className="space-y-6 text-base lg:flex lg:gap-8 lg:space-y-0 lg:text-sm">
-                                        {menuItems.map((item, index) => (
-                                            <li key={index}>
-                                                <Link
-                                                    href={item.href}
-                                                    className="text-muted-foreground hover:text-accent-foreground block duration-150">
-                                                    <span>{item.name}</span>
-                                                </Link>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
+                               
 
                                 <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit lg:border-l lg:pl-6">
                                     <ModeToggle />
@@ -98,7 +80,7 @@ export default function HeroSection() {
                             <Button
                                 asChild
                                 size="lg">
-                                <Link href="#">
+                                <Link href="/dashboard">
                                     <span className="btn-label">Start Forging</span>
                                 </Link>
                             </Button>
@@ -136,18 +118,12 @@ export default function HeroSection() {
                                     />
 
                                     <Image
-                                        className="rounded-(--radius) z-1 relative border dark:hidden"
-                                        src="/card.png"
-                                        alt="Tailark hero section"
-                                        width={2880}
-                                        height={2074}
-                                    />
-                                    <Image
-                                        className="rounded-(--radius) z-1 relative hidden border dark:block"
-                                        src="/dark-card.webp"
-                                        alt="Tailark hero section"
-                                        width={2880}
-                                        height={2074}
+                                        className="rounded-2xl z-1 relative border shadow-2xl shadow-zinc-400/20 dark:shadow-zinc-900/20"
+                                        src="/homepage.png"
+                                        alt="NoteForge hero section"
+                                        width={1200}
+                                        height={800}
+                                        priority
                                     />
                                 </div>
                             </div>
